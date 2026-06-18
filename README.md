@@ -111,7 +111,7 @@ En PC2 aparece una separación interesante que no responde al IMC de forma direc
 
 ---
 
-### Paso 4 — Visualizaciones del PCA
+### Paso 4 - Visualizaciones del PCA
 
 Se generaron **5 visualizaciones complementarias** del PCA:
 
@@ -165,7 +165,7 @@ Análogo al clustering de genes pero aplicado a individuos. Los tres clusters de
 
 ---
 
-### Paso 5 — Heatmaps de correlaciones de Spearman
+### Paso 5 - Heatmaps de correlaciones de Spearman
 
 #### 5.1 Correlación entre genes y componentes principales
 
