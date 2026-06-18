@@ -68,13 +68,13 @@ La pregunta central es: ¿pueden los perfiles de expresión génica predecir si 
 
 El trabajo está organizado en **7 pasos secuenciales** que siguen una lógica estadística clara:
 
-### Paso 1 — Carga y limpieza de los datos
+### Paso 1 - Carga y limpieza de los datos
 
 Se cargó el dataset *Los Simpson* y se realizó una inspección inicial: valores faltantes, tipos de variables, distribución del IMC, etc. Se construyó la variable respuesta binaria `sobrepeso` (IMC ≥ 25 = 1, IMC < 25 = 0) para la regresión logística posterior.
 
 ---
 
-### Paso 2 — Análisis de normalidad (test de Shapiro-Wilk)
+### Paso 2 - Análisis de normalidad (test de Shapiro-Wilk)
 
 Se evaluó la distribución de los 37 genes usando el test de Shapiro-Wilk. **Ninguno de los genes mostró distribución normal** (p < 0.05 en todos los casos). Este resultado no fue sorprendente: los datos de expresión génica rara vez son normales, especialmente en muestras pequeñas.
 
@@ -82,7 +82,7 @@ Se evaluó la distribución de los 37 genes usando el test de Shapiro-Wilk. **Ni
 
 ---
 
-### Paso 3 — Análisis de Componentes Principales (PCA)
+### Paso 3 - Análisis de Componentes Principales (PCA)
 
 Este es el núcleo del trabajo. Con 37 genes y 59 individuos, el espacio de datos es de alta dimensionalidad. El PCA permite:
 
