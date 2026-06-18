@@ -297,6 +297,172 @@ library(knitr)
 
 ---
 
+# Análisis de Componentes Principales y Regresión Logística sobre Expresión Génica Asociada al IMC
+
+**Proyecto Transversal en R · Estadística y R para Ciencias de la Salud**  
+**Máster Universitario en Bioinformática · UNIR**  
+**Autores:** Caren Moreno, Analía Pastrana Jiménez, Ángel Guerrero
+
+---
+
+## Descripción
+
+Este repositorio contiene el análisis bioinformático completo de la **expresión de 37 genes asociados a la obesidad** en una cohorte simulada de 59 individuos (dataset *Los Simpson*). El objetivo es identificar patrones de expresión génica relacionados con el índice de masa corporal (IMC) mediante técnicas de reducción de la dimensionalidad, clustering, correlación y modelos de regresión logística.
+
+Todo el análisis fue realizado en **RStudio** con un documento **R Markdown** reproducible que genera automáticamente las figuras y tablas.
+
+---
+
+## Estructura del repositorio
+
+```
+Actividad3-PCA-ExpresionGenica-IMC/
+│
+├── Moreno_Caren_Actividad3.Rmd        # Script principal (R Markdown, ejecutable en RStudio)
+├── Moreno_Caren_Actividad3.html       # Informe HTML renderizado
+├── Base_de_datos_Los_Simpson_completa.csv  # Dataset (necesario en la misma carpeta que el .Rmd)
+│
+└── figuras_poster/                    # Figuras y tablas generadas al correr el .Rmd
+    ├── fig1_variables_cos2.png
+    ├── fig2_cluster_variables.png
+    ├── fig3_contribuciones.png
+    ├── fig4_individuos_imc.png
+    ├── fig5_cluster_individuos.png
+    ├── fig6_heatmap_genes_pc.png
+    ├── fig7_heatmap_genes_pacientes.png
+    ├── fig8_forest_plot.png
+    ├── fig9_comparacion_modelos.png
+    ├── tabla_pca_varianza.csv
+    ├── tabla_pca_cargas.csv
+    ├── tabla_shapiro_wilk.csv
+    ├── tabla_descriptiva_terciles.csv
+    ├── tabla_regresion_logistica.csv
+    └── tabla_screening_confusoras.csv
+```
+
+---
+
+## Cómo reproducir el análisis
+
+1. Clonar el repositorio o descargar los archivos.
+2. Abrir `Moreno_Caren_Actividad3.Rmd` en RStudio.
+3. Asegurarse de que `Base_de_datos_Los_Simpson_completa.csv` está en la misma carpeta.
+4. Hacer clic en **Knit**. Los paquetes faltantes se instalan automáticamente al inicio del script.
+5. Al finalizar, se genera el HTML y la carpeta `figuras_poster/` con todas las figuras en alta resolución (300 dpi).
+
+---
+
+## Dataset
+
+- **N = 59 individuos** (personajes de la serie Los Simpson)
+- **37 genes** relacionados con la regulación del peso corporal y el metabolismo energético (de ADCY3 a UHMK1)
+- Variables adicionales: IMC, edad, sexo, nivel educativo, hábitos dietéticos, actividad física, tabaco y alcohol
+
+Los valores de expresión génica son datos continuos estandarizados. No se detectaron valores faltantes en las variables génicas.
+
+---
+
+## Metodología
+
+### 1. Carga y preprocesamiento
+Se verificó la ausencia de datos faltantes en las 37 variables génicas. Se derivó la variable categórica de IMC (Normal / Sobrepeso / Obesidad) y la variable binaria de sobrepeso (IMC ≥ 25).
+
+### 2. Test de normalidad (Shapiro-Wilk)
+Se evaluó la normalidad de los 37 genes: **ninguno presentó distribución normal** (p < 0,05 en todos los casos), justificando el uso de estadísticos no paramétricos en los análisis descriptivos posteriores (mediana, RIQ, Kruskal-Wallis).
+
+### 3. Análisis de Componentes Principales (PCA)
+PCA con centrado y escalado de las variables génicas. Se extrajeron los scores de las **6 primeras componentes**, que explican de forma acumulada el **43,9% de la varianza total** (PC1: 12,5%; PC2: 8,6%; PC3: 6,5%).
+
+| Componente | Varianza explicada (%) | Acumulada (%) |
+|------------|----------------------|----------------|
+| PC1 | 12,48 | 12,48 |
+| PC2 | 8,56 | 21,04 |
+| PC3 | 6,53 | 27,57 |
+| PC4 | 6,13 | 33,70 |
+| PC5 | 5,36 | 39,06 |
+| PC6 | 4,89 | 43,94 |
+
+### 4. Clustering K-means (k=3)
+Clustering aplicado tanto a **variables génicas** (sobre las cargas de PC1-PC2) como a **individuos** (sobre los scores de PC1-PC6).
+
+### 5. Heatmap de correlaciones de Spearman
+Correlación de Spearman entre cada gen y cada una de las 6 primeras componentes principales. Un total de **67 de 222 correlaciones** fueron estadísticamente significativas (p < 0,05).
+
+### 6. Análisis descriptivo por terciles
+Los individuos se estratificaron por terciles de PC1, PC2 y PC3. Se comparó la expresión génica entre grupos mediante Kruskal-Wallis: 10 genes mostraron diferencias significativas por tercil de PC1, 11 por PC2 y 7 por PC3.
+
+### 7. Regresión logística binaria (sobrepeso: IMC ≥ 25)
+Se ajustaron 3 modelos con nivel de ajuste progresivo:
+- **Modelo 1** (crudo): terciles de PC1, PC2 y PC3
+- **Modelo 2**: + edad y sexo
+- **Modelo 3** (final): + variables de ajuste identificadas por cribado (consumo de carnes y bollería industrial)
+
+---
+
+## Figuras y su interpretación biológica
+
+### Figura 1 · Variables del PCA coloreadas por cos2
+![Figura 1](figuras_poster/fig1_variables_cos2.png)
+
+El gráfico de círculo de correlaciones muestra la dirección y calidad de representación (cos2) de cada gen en el espacio PC1-PC2. Los genes con cos2 más alto (colores más oscuros) son los que mejor quedan representados en este plano. **LEPR, ANO4, POMC, ADCY3 y PCSK1** se proyectan fuertemente hacia la derecha (PC1 positivo), lo que los identifica como los principales contribuyentes a la primera componente, asociada a procesos de regulación del apetito y del balance energético. En el eje PC2, **NTRK2 y CADM2** son los genes más influyentes, apuntando hacia la parte superior del gráfico. La mayoría de los genes presenta cos2 moderado-bajo, lo que refleja que la variabilidad de la expresión génica en esta cohorte está distribuida entre múltiples componentes y no queda capturada por las dos primeras dimensiones.
+
+---
+
+### Figura 2 · Distribución de pacientes en PC1-PC2 según categoría de IMC
+![Figura 2](figuras_poster/fig4_individuos_imc.png)
+
+El gráfico de individuos muestra la posición de cada paciente en el espacio de las dos primeras componentes principales, coloreado según su categoría de IMC. Se observa un **solapamiento considerable** entre las tres categorías (Normal, Sobrepeso y Obesidad), sin una separación clara en el plano PC1-PC2. Los pacientes con obesidad tienden a distribuirse hacia valores positivos de PC1 (consistente con la dirección de genes como POMC, LEPR y ADCY3), pero las elipses de confianza se superponen ampliamente. Esto indica que el perfil de expresión génica capturado por las dos primeras componentes no discrimina de forma completa el estado ponderal, probablemente porque la etiología de la obesidad es multifactorial e involucra dimensiones más allá del eje PC1-PC2.
+
+---
+
+### Figura 3 · Heatmap de correlaciones de Spearman entre genes y componentes principales
+![Figura 3](figuras_poster/fig6_heatmap_genes_pc.png)
+
+El heatmap muestra la correlación de Spearman de cada gen con cada una de las 6 primeras componentes. Los asteriscos indican correlaciones significativas (\*p < 0,05; \*\*p < 0,01). Los colores naranja-rojizos indican correlación positiva y los violáceos correlación negativa. Se puede observar que **ADCY3, POMC, LEPR, ANO4 y PCSK1** presentan correlaciones positivas significativas con PC1, coherente con su alta contribución observada en la figura anterior. Por su parte, **NTRK2, CADM2 y KSR2** se asocian principalmente con PC2. La dendrograma de filas agrupa los genes según su patrón de correlación, permitiendo identificar módulos funcionales: por ejemplo, un grupo de genes (ADCY3, POMC, LEPR, SH2B1, GIPR) con perfil similar hacia PC1, y otro grupo (FTO, PHIP, CREBRF) con afinidad hacia PC3. Este tipo de visualización es útil para generar hipótesis sobre qué grupos de genes co-varían y podrían estar implicados en los mismos procesos biológicos.
+
+---
+
+### Figura 4 · Forest plot del modelo de regresión logística para sobrepeso
+![Figura 4](figuras_poster/fig8_forest_plot.png)
+
+El forest plot muestra los Odds Ratio (OR) con sus intervalos de confianza al 95% del modelo de regresión logística final (Modelo 3, ajustado por terciles de PC1-PC3, edad, sexo, consumo de carnes y bollería industrial). Los puntos a la derecha de la línea discontinua (OR > 1) indican mayor riesgo de sobrepeso; los de la izquierda, efecto protector. **Ninguna de las componentes principales** mantuvo una asociación estadísticamente significativa con el sobrepeso tras el ajuste completo (todos los IC95% cruzan el 1). En cambio, el **consumo de carnes** resultó el único predictor independiente significativo (OR = 1,03 por g/día; p = 0,015), indicando que por cada gramo adicional de carne consumido diariamente aumenta ligeramente el riesgo de sobrepeso. La edad mostró una tendencia positiva aunque no significativa (OR = 1,04; p = 0,088) en el modelo ajustado. Estos resultados sugieren que, en esta cohorte, el estilo de vida tiene mayor peso predictivo sobre el sobrepeso que la señal génica capturada por el PCA.
+
+---
+
+## Resultados clave
+
+- **Normalidad:** Ninguno de los 37 genes presenta distribución normal (Shapiro-Wilk, todos p < 0,05).
+- **PCA:** Las 6 primeras componentes explican el 43,9% de la varianza. Los genes con mayor contribución a PC1 son POMC, ANO4, LEPR, ADCY3 y PCSK1.
+- **Clustering:** El k-means (k=3) sobre genes identifica tres módulos: genes ligados a PC1 positivo (eje de regulación del apetito), genes ligados a PC2 y genes con proyección negativa en PC1.
+- **Heatmap:** 67 de 222 correlaciones Spearman son significativas. Los genes más correlacionados con PC1 son ADCY3 y POMC (\*\*p < 0,01).
+- **Regresión logística:** En el modelo crudo, el tercil más bajo de PC2 (T3 vs T1: OR = 0,24; p = 0,044) se asoció a menor riesgo de sobrepeso, pero esta asociación no se mantuvo tras el ajuste. El único predictor independiente y significativo en el modelo final fue el consumo de carnes (OR = 1,03; p = 0,015).
+
+---
+
+## Limitaciones
+
+- Tamaño muestral reducido (n=59), lo que limita la potencia estadística y la generalización.
+- Ausencia de normalidad en todos los genes, lo que impide el uso de métodos paramétricos.
+- El PCA no separa completamente las categorías clínicas de IMC, posiblemente por la naturaleza poligénica y multifactorial de la obesidad.
+- Los datos provienen de un dataset simulado (personajes de Los Simpson), por lo que los resultados tienen carácter exclusivamente metodológico y no deben extrapolarse clínicamente.
+
+---
+
+## Tecnologías utilizadas
+
+- **R 4.x / RStudio** — entorno de análisis estadístico
+- **R Markdown** — informe reproducible con salida HTML
+- Paquetes principales: `tidyverse`, `factoextra`, `FactoMineR`, `pheatmap`, `broom`, `car`, `pROC`, `lmtest`, `kableExtra`
+
+---
+
+## Referencia
+
+Actividad 3 — Proyecto Transversal en R (I)  
+Máster Universitario en Bioinformática · UNIR  
+Asignatura: Estadística y R para Ciencias de la Salud  
+Junio 2026
+
 ## Licencia
 
 Este trabajo es de uso académico en el marco de la materia *Estadística y R para Ciencias de la Salud*. El dataset *Los Simpson* es un conjunto de datos simulado con fines educativos.
