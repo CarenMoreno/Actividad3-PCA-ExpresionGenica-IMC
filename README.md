@@ -28,12 +28,12 @@ Se estudiaron 37 genes relacionados con el metabolismo y la obesidad en 59 indiv
 
 # Principales resultados
 
-# Actividad 3 — Análisis Multivariante (PCA), Correlaciones y Regresión Logística sobre Expresión Génica Relacionada con la Obesidad
+# Proyecto Transversal en R (I): Análisis de bioestadística aplicada a la expresión génica en Los Simpson
 
 **Materia:** Estadística y R para Ciencias de la Salud  
 **Alumna:** Caren Moreno  
 **Fecha:** 18 de junio de 2026  
-**Dataset:** *Los Simpson* — 59 individuos, 37 genes asociados a obesidad
+**Dataset:** *Los Simpson* - 59 individuos, 37 genes asociados a obesidad
 
 ---
 
