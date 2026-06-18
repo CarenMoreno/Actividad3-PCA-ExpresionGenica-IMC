@@ -25,3 +25,5 @@ Se estudiaron 37 genes relacionados con el metabolismo y la obesidad en 59 indiv
 ├── Actividad3.Rmd
 ├── Actividad3.html
 └── README.md
+
+# Principales resultados
