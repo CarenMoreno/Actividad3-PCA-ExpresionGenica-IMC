@@ -294,43 +294,6 @@ Los valores de expresión génica son datos continuos estandarizados. No se dete
 
 ---
 
-## Metodología
-
-### 1. Carga y preprocesamiento
-Se verificó la ausencia de datos faltantes en las 37 variables génicas. Se derivó la variable categórica de IMC (Normal / Sobrepeso / Obesidad) y la variable binaria de sobrepeso (IMC ≥ 25).
-
-### 2. Test de normalidad (Shapiro-Wilk)
-Se evaluó la normalidad de los 37 genes: **ninguno presentó distribución normal** (p < 0,05 en todos los casos), justificando el uso de estadísticos no paramétricos en los análisis descriptivos posteriores (mediana, RIQ, Kruskal-Wallis).
-
-### 3. Análisis de Componentes Principales (PCA)
-PCA con centrado y escalado de las variables génicas. Se extrajeron los scores de las **6 primeras componentes**, que explican de forma acumulada el **43,9% de la varianza total** (PC1: 12,5%; PC2: 8,6%; PC3: 6,5%).
-
-| Componente | Varianza explicada (%) | Acumulada (%) |
-|------------|----------------------|----------------|
-| PC1 | 12,48 | 12,48 |
-| PC2 | 8,56 | 21,04 |
-| PC3 | 6,53 | 27,57 |
-| PC4 | 6,13 | 33,70 |
-| PC5 | 5,36 | 39,06 |
-| PC6 | 4,89 | 43,94 |
-
-### 4. Clustering K-means (k=3)
-Clustering aplicado tanto a **variables génicas** (sobre las cargas de PC1-PC2) como a **individuos** (sobre los scores de PC1-PC6).
-
-### 5. Heatmap de correlaciones de Spearman
-Correlación de Spearman entre cada gen y cada una de las 6 primeras componentes principales. Un total de **67 de 222 correlaciones** fueron estadísticamente significativas (p < 0,05).
-
-### 6. Análisis descriptivo por terciles
-Los individuos se estratificaron por terciles de PC1, PC2 y PC3. Se comparó la expresión génica entre grupos mediante Kruskal-Wallis: 10 genes mostraron diferencias significativas por tercil de PC1, 11 por PC2 y 7 por PC3.
-
-### 7. Regresión logística binaria (sobrepeso: IMC ≥ 25)
-Se ajustaron 3 modelos con nivel de ajuste progresivo:
-- **Modelo 1** (crudo): terciles de PC1, PC2 y PC3
-- **Modelo 2**: + edad y sexo
-- **Modelo 3** (final): + variables de ajuste identificadas por cribado (consumo de carnes y bollería industrial)
-
----
-
 ## Figuras y su interpretación biológica
 
 ---
