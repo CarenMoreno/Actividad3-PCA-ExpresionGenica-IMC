@@ -25,7 +25,7 @@ Actividad3-PCA-ExpresionGenica-IMC/
 │
 ├── scripts/
 │   ├── Moreno_Caren_Actividad3.Rmd                       
-│     └── Moreno_Caren_Actividad3.html
+│   └── Moreno_Caren_Actividad3.html
 │
 ├── README.md
 │
