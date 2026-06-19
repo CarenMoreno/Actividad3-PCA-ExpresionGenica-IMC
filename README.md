@@ -41,12 +41,15 @@ Actividad3-PCA-ExpresionGenica-IMC/
 │   └── fig9_comparacion_modelos.png
 │
 └── tablas/                   
-    ├── tabla_pca_varianza.csv
-    ├── tabla_pca_cargas.csv
-    ├── tabla_shapiro_wilk.csv
+    ├── tabla_cluster_variables.csv
+    ├── tabla_cluster_vs_imc.csv
+    ├── tabla_correlaciones_spearman.csv
     ├── tabla_descriptiva_terciles.csv
+    ├── tabla_pca_cargas.csv
+    ├── tabla_pca_varianza.csv
     ├── tabla_regresion_logistica.csv
-    └── tabla_screening_confusoras.csv
+    ├── tabla_screening_confusoras.csv
+    └── tabla_shapiro_wilk.csv
 ```
 
 ---
