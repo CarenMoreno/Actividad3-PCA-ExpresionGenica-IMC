@@ -256,6 +256,14 @@ Los principales hallazgos del trabajo son:
 
 5. La **heterogeneidad dentro de cada categoría de IMC** observada en los heatmaps apoya la hipótesis de que la obesidad tiene subtipos moleculares distinguibles por expresión génica, un área activa de investigación en medicina de precisión.
 
+## Resultados clave
+
+- **Normalidad:** Ninguno de los 37 genes presenta distribución normal (Shapiro-Wilk, todos p < 0,05).
+- **PCA:** Las 6 primeras componentes explican el 43,9% de la varianza. Los genes con mayor contribución a PC1 son POMC, ANO4, LEPR, ADCY3 y PCSK1.
+- **Clustering:** El k-means (k=3) sobre genes identifica tres módulos: genes ligados a PC1 positivo (eje de regulación del apetito), genes ligados a PC2 y genes con proyección negativa en PC1.
+- **Heatmap:** 67 de 222 correlaciones Spearman son significativas. Los genes más correlacionados con PC1 son ADCY3 y POMC (\*\*p < 0,01).
+- **Regresión logística:** En el modelo crudo, el tercil más bajo de PC2 (T3 vs T1: OR = 0,24; p = 0,044) se asoció a menor riesgo de sobrepeso, pero esta asociación no se mantuvo tras el ajuste. El único predictor independiente y significativo en el modelo final fue el consumo de carnes (OR = 1,03; p = 0,015).
+
 ---
 
 ## Cómo reproducir el análisis
@@ -271,26 +279,6 @@ Los principales hallazgos del trabajo son:
 3. Hacer click en **Knit** → **Knit to HTML**
 
 > **Requisito:** R ≥ 4.2.0 con los paquetes listados arriba instalados.
-
----
-
-## Dataset
-
-- **N = 59 individuos** (personajes de la serie Los Simpson)
-- **37 genes** relacionados con la regulación del peso corporal y el metabolismo energético (de ADCY3 a UHMK1)
-- Variables adicionales: IMC, edad, sexo, nivel educativo, hábitos dietéticos, actividad física, tabaco y alcohol
-
-Los valores de expresión génica son datos continuos estandarizados. No se detectaron valores faltantes en las variables génicas.
-
----
-
-## Resultados clave
-
-- **Normalidad:** Ninguno de los 37 genes presenta distribución normal (Shapiro-Wilk, todos p < 0,05).
-- **PCA:** Las 6 primeras componentes explican el 43,9% de la varianza. Los genes con mayor contribución a PC1 son POMC, ANO4, LEPR, ADCY3 y PCSK1.
-- **Clustering:** El k-means (k=3) sobre genes identifica tres módulos: genes ligados a PC1 positivo (eje de regulación del apetito), genes ligados a PC2 y genes con proyección negativa en PC1.
-- **Heatmap:** 67 de 222 correlaciones Spearman son significativas. Los genes más correlacionados con PC1 son ADCY3 y POMC (\*\*p < 0,01).
-- **Regresión logística:** En el modelo crudo, el tercil más bajo de PC2 (T3 vs T1: OR = 0,24; p = 0,044) se asoció a menor riesgo de sobrepeso, pero esta asociación no se mantuvo tras el ajuste. El único predictor independiente y significativo en el modelo final fue el consumo de carnes (OR = 1,03; p = 0,015).
 
 ---
 
