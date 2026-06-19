@@ -160,7 +160,7 @@ Análogo al clustering de genes pero aplicado a individuos. Los tres clusters de
 
 Este heatmap muestra la correlación de Spearman entre la expresión de cada gen y las 6 primeras componentes principales. Los asteriscos indican significancia estadística (*p<0.05, **p<0.01).
 
-> **Interpretación:** La mayoría de los genes tiene correlación significativa con al menos una componente, pero raramente con más de dos. Esto confirma que el PCA está capturando señales biológicas relativamente diferenciadas en cada eje.
+> **Interpretación:** Los colores naranja-rojizos indican correlación positiva y los violáceos correlación negativa. Se puede observar que **ADCY3, POMC, LEPR, ANO4 y PCSK1** presentan correlaciones positivas significativas con PC1, coherente con su alta contribución observada en la figura anterior. Por su parte, **NTRK2, CADM2 y KSR2** se asocian principalmente con PC2. El diagrama de árbol de filas agrupa los genes según su patrón de correlación, permitiendo identificar módulos funcionales: por ejemplo, un grupo de genes (ADCY3, POMC, LEPR, SH2B1, GIPR) con perfil similar hacia PC1, y otro grupo (FTO, PHIP, CREBRF) con afinidad hacia PC3. La mayoría de los genes tiene correlación significativa con al menos una componente, pero raramente con más de dos. Esto confirma que el PCA está capturando señales biológicas relativamente diferenciadas en cada eje.
 
 ---
 
