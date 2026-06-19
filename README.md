@@ -16,7 +16,7 @@ Se estudiaron 37 genes relacionados con el metabolismo y la obesidad en 59 indiv
 - Evaluar la asociación entre componentes principales y categorías de IMC.
 
 ## Estructura del repositorio
-
+```
 ├── datos/
 ├── scripts/
 ├── resultados/
@@ -25,6 +25,7 @@ Se estudiaron 37 genes relacionados con el metabolismo y la obesidad en 59 indiv
 ├── Actividad3.Rmd
 ├── Actividad3.html
 └── README.md
+```
 
 # Principales resultados
 
