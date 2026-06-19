@@ -140,7 +140,7 @@ Las barras muestran qué porcentaje de la varianza de cada componente explica ca
 
 Este es uno de los gráficos más interesantes del trabajo. Los individuos se proyectan en el plano PC1-PC2 y se colorean según su categoría de IMC (normopeso, sobrepeso, obesidad).
 
-> **Interpretación biológica:** Se observa una **tendencia de separación parcial** entre categorías de IMC a lo largo de PC1. Esto sugiere que los patrones de expresión génica capturados por PC1 tienen alguna relación con el IMC, aunque la separación no es perfecta. Dicho de otro modo: el IMC no está "escrito" de forma limpia en el transcriptoma, lo cual es coherente con la complejidad poligénica y multifactorial de la obesidad.
+> **Interpretación biológica: El gráfico de individuos muestra la posición de cada paciente en el espacio de las dos primeras componentes principales, coloreado según su categoría de IMC. Se observa un **solapamiento considerable** entre las tres categorías (Normal, Sobrepeso y Obesidad), sin una separación clara en el plano PC1-PC2. Los pacientes con obesidad tienden a distribuirse hacia valores positivos de PC1 (consistente con la dirección de genes como POMC, LEPR y ADCY3), pero las elipses de confianza se superponen ampliamente. Esto indica que el perfil de expresión génica capturado por las dos primeras componentes no discrimina de forma completa el estado ponderal, probablemente porque la etiología de la obesidad es multifactorial e involucra dimensiones más allá del eje PC1-PC2.
 
 ---
 
