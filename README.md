@@ -242,33 +242,6 @@ Los principales hallazgos del trabajo son:
 
 ---
 
-## Tecnologías y paquetes utilizados
-
-```r
-# Análisis estadístico y PCA
-library(tidyverse)
-library(FactoMineR)
-library(factoextra)
-
-# Visualización
-library(ggplot2)
-library(pheatmap)
-library(corrplot)
-
-# Modelos y tablas
-library(gtsummary)
-library(tableone)
-library(broom)
-library(pROC)
-library(forestplot)
-
-# Formato del informe
-library(rmarkdown)
-library(knitr)
-```
-
----
-
 ## Cómo reproducir el análisis
 
 1. Clonar el repositorio:
