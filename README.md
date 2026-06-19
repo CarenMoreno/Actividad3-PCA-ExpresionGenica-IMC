@@ -109,7 +109,7 @@ El gráfico de círculo de correlaciones muestra qué tan bien representado est�
 
 #### 4.2 Clustering de variables (k=3) sobre el espacio PCA
 
-![Clustering de variables](outputs/figuras/pca_clustering_vars.png)
+![Clustering de variables](figuras/fig2_cluster_variables.png)
 
 Se aplicó k-means (k=3) sobre las coordenadas de los genes en el espacio PCA. Los tres clusters identificados sugieren la existencia de **tres "programas" de expresión génica** relativamente independientes:
 
