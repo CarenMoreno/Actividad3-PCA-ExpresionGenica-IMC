@@ -274,22 +274,6 @@ Los principales hallazgos del trabajo son:
 
 ---
 
-# Proyecto Transversal en R (I): Análisis de bioestadística aplicada a la expresión génica en Los Simpson
-
-**Proyecto Transversal en R · Estadística y R para Ciencias de la Salud**  
-**Máster Universitario en Bioinformática · UNIR**  
-**Autor:** Caren Moreno
-
----
-
-## Descripción
-
-Este repositorio contiene el análisis bioinformático completo de la **expresión de 37 genes asociados a la obesidad** en una cohorte simulada de 59 individuos (dataset *Los Simpson*). El objetivo es identificar patrones de expresión génica relacionados con el índice de masa corporal (IMC) mediante técnicas de reducción de la dimensionalidad, clustering, correlación y modelos de regresión logística.
-
-Todo el análisis fue realizado en **RStudio** con un documento **R Markdown** reproducible que genera automáticamente las figuras y tablas.
-
----
-
 ## Cómo reproducir el análisis
 
 1. Clonar el repositorio o descargar los archivos.
