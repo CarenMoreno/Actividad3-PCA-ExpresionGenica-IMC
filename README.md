@@ -333,32 +333,6 @@ Se ajustaron 3 modelos con nivel de ajuste progresivo:
 
 ## Figuras y su interpretación biológica
 
-### Figura 1 · Variables del PCA coloreadas por cos2
-![Figura 1](figuras_poster/fig1_variables_cos2.png)
-
-El gráfico de círculo de correlaciones muestra la dirección y calidad de representación (cos2) de cada gen en el espacio PC1-PC2. Los genes con cos2 más alto (colores más oscuros) son los que mejor quedan representados en este plano. **LEPR, ANO4, POMC, ADCY3 y PCSK1** se proyectan fuertemente hacia la derecha (PC1 positivo), lo que los identifica como los principales contribuyentes a la primera componente, asociada a procesos de regulación del apetito y del balance energético. En el eje PC2, **NTRK2 y CADM2** son los genes más influyentes, apuntando hacia la parte superior del gráfico. La mayoría de los genes presenta cos2 moderado-bajo, lo que refleja que la variabilidad de la expresión génica en esta cohorte está distribuida entre múltiples componentes y no queda capturada por las dos primeras dimensiones.
-
----
-
-### Figura 2 · Distribución de pacientes en PC1-PC2 según categoría de IMC
-![Figura 2](figuras_poster/fig4_individuos_imc.png)
-
-El gráfico de individuos muestra la posición de cada paciente en el espacio de las dos primeras componentes principales, coloreado según su categoría de IMC. Se observa un **solapamiento considerable** entre las tres categorías (Normal, Sobrepeso y Obesidad), sin una separación clara en el plano PC1-PC2. Los pacientes con obesidad tienden a distribuirse hacia valores positivos de PC1 (consistente con la dirección de genes como POMC, LEPR y ADCY3), pero las elipses de confianza se superponen ampliamente. Esto indica que el perfil de expresión génica capturado por las dos primeras componentes no discrimina de forma completa el estado ponderal, probablemente porque la etiología de la obesidad es multifactorial e involucra dimensiones más allá del eje PC1-PC2.
-
----
-
-### Figura 3 · Heatmap de correlaciones de Spearman entre genes y componentes principales
-![Figura 3](figuras_poster/fig6_heatmap_genes_pc.png)
-
-El heatmap muestra la correlación de Spearman de cada gen con cada una de las 6 primeras componentes. Los asteriscos indican correlaciones significativas (\*p < 0,05; \*\*p < 0,01). Los colores naranja-rojizos indican correlación positiva y los violáceos correlación negativa. Se puede observar que **ADCY3, POMC, LEPR, ANO4 y PCSK1** presentan correlaciones positivas significativas con PC1, coherente con su alta contribución observada en la figura anterior. Por su parte, **NTRK2, CADM2 y KSR2** se asocian principalmente con PC2. La dendrograma de filas agrupa los genes según su patrón de correlación, permitiendo identificar módulos funcionales: por ejemplo, un grupo de genes (ADCY3, POMC, LEPR, SH2B1, GIPR) con perfil similar hacia PC1, y otro grupo (FTO, PHIP, CREBRF) con afinidad hacia PC3. Este tipo de visualización es útil para generar hipótesis sobre qué grupos de genes co-varían y podrían estar implicados en los mismos procesos biológicos.
-
----
-
-### Figura 4 · Forest plot del modelo de regresión logística para sobrepeso
-![Figura 4](figuras_poster/fig8_forest_plot.png)
-
-El forest plot muestra los Odds Ratio (OR) con sus intervalos de confianza al 95% del modelo de regresión logística final (Modelo 3, ajustado por terciles de PC1-PC3, edad, sexo, consumo de carnes y bollería industrial). Los puntos a la derecha de la línea discontinua (OR > 1) indican mayor riesgo de sobrepeso; los de la izquierda, efecto protector. **Ninguna de las componentes principales** mantuvo una asociación estadísticamente significativa con el sobrepeso tras el ajuste completo (todos los IC95% cruzan el 1). En cambio, el **consumo de carnes** resultó el único predictor independiente significativo (OR = 1,03 por g/día; p = 0,015), indicando que por cada gramo adicional de carne consumido diariamente aumenta ligeramente el riesgo de sobrepeso. La edad mostró una tendencia positiva aunque no significativa (OR = 1,04; p = 0,088) en el modelo ajustado. Estos resultados sugieren que, en esta cohorte, el estilo de vida tiene mayor peso predictivo sobre el sobrepeso que la señal génica capturada por el PCA.
-
 ---
 
 ## Resultados clave
