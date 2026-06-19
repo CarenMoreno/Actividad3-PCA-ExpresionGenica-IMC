@@ -451,8 +451,8 @@ El forest plot muestra los Odds Ratio (OR) con sus intervalos de confianza al 95
 
 ## Tecnologías utilizadas
 
-- **R 4.x / RStudio** — entorno de análisis estadístico
-- **R Markdown** — informe reproducible con salida HTML
+- **R 4.x / RStudio** - entorno de análisis estadístico
+- **R Markdown** - informe reproducible con salida HTML
 - Paquetes principales: `tidyverse`, `factoextra`, `FactoMineR`, `pheatmap`, `broom`, `car`, `pROC`, `lmtest`, `kableExtra`
 
 ---
