@@ -81,14 +81,14 @@ Este es el núcleo del trabajo. Con 37 genes y 59 individuos, el espacio de dato
 
 Las **6 primeras componentes** acumulan el **43.9% de la varianza total**. Puede parecer poco, pero es esperable en datos de expresión génica donde la señal biológica está distribuida entre muchos genes y la varianza es inherentemente ruidosa.
 
-| Componente | Varianza (%) | Acumulada (%) |
-|------------|-------------|---------------|
-| PC1 | ~12% | ~12% |
-| PC2 | ~9% | ~21% |
-| PC3 | ~7% | ~28% |
-| PC4 | ~6% | ~34% |
-| PC5 | ~5% | ~39% |
-| PC6 | ~5% | ~44% |
+| Componente | Varianza explicada (%) | Acumulada (%) |
+|------------|----------------------|----------------|
+| PC1 | 12,48 | 12,48 |
+| PC2 | 8,56 | 21,04 |
+| PC3 | 6,53 | 27,57 |
+| PC4 | 6,13 | 33,70 |
+| PC5 | 5,36 | 39,06 |
+| PC6 | 4,89 | 43,94 |
 
 #### Interpretación biológica de los loadings
 
