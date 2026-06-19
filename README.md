@@ -294,10 +294,6 @@ Los valores de expresión génica son datos continuos estandarizados. No se dete
 
 ---
 
-## Figuras y su interpretación biológica
-
----
-
 ## Resultados clave
 
 - **Normalidad:** Ninguno de los 37 genes presenta distribución normal (Shapiro-Wilk, todos p < 0,05).
@@ -305,15 +301,6 @@ Los valores de expresión génica son datos continuos estandarizados. No se dete
 - **Clustering:** El k-means (k=3) sobre genes identifica tres módulos: genes ligados a PC1 positivo (eje de regulación del apetito), genes ligados a PC2 y genes con proyección negativa en PC1.
 - **Heatmap:** 67 de 222 correlaciones Spearman son significativas. Los genes más correlacionados con PC1 son ADCY3 y POMC (\*\*p < 0,01).
 - **Regresión logística:** En el modelo crudo, el tercil más bajo de PC2 (T3 vs T1: OR = 0,24; p = 0,044) se asoció a menor riesgo de sobrepeso, pero esta asociación no se mantuvo tras el ajuste. El único predictor independiente y significativo en el modelo final fue el consumo de carnes (OR = 1,03; p = 0,015).
-
----
-
-## Limitaciones
-
-- Tamaño muestral reducido (n=59), lo que limita la potencia estadística y la generalización.
-- Ausencia de normalidad en todos los genes, lo que impide el uso de métodos paramétricos.
-- El PCA no separa completamente las categorías clínicas de IMC, posiblemente por la naturaleza poligénica y multifactorial de la obesidad.
-- Los datos provienen de un dataset simulado (personajes de Los Simpson), por lo que los resultados tienen carácter exclusivamente metodológico y no deben extrapolarse clínicamente.
 
 ---
 
