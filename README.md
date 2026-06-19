@@ -123,7 +123,7 @@ Esta agrupación es exploratoria pero biológicamente sugerente.
 
 #### 4.3 Contribución de las variables a PC1 y PC2
 
-![Contribución de variables](outputs/figuras/pca_contribuciones.png)
+![Contribución de variables](figuras/fig3_contribuciones.png)
 
 Las barras muestran qué porcentaje de la varianza de cada componente explica cada gen. La línea punteada indica el umbral esperado si todos los genes contribuyeran por igual (100/37 ≈ 2.7%). Los genes que superan ese umbral son los más informativos para cada componente.
 
