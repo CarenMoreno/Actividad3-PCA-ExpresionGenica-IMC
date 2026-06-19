@@ -281,7 +281,7 @@ library(knitr)
 
 ---
 
-# Análisis de Componentes Principales y Regresión Logística sobre Expresión Génica Asociada al IMC
+# Proyecto Transversal en R (I): Análisis de bioestadística aplicada a la expresión génica en Los Simpson
 
 **Proyecto Transversal en R · Estadística y R para Ciencias de la Salud**  
 **Máster Universitario en Bioinformática · UNIR**  
