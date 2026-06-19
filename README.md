@@ -216,6 +216,7 @@ Se evaluó mediante:
 ![Forest plot](figuras/fig8_forest_plot.png)
 
 Representación visual de los OR con sus IC95%. Las variables cuyo intervalo no cruza el 1 son las que tienen asociación estadísticamente significativa con el sobrepeso.
+> **Interpretación:** El forest plot muestra los Odds Ratio (OR) con sus intervalos de confianza al 95% del modelo de regresión logística final (Modelo 3, ajustado por terciles de PC1-PC3, edad, sexo, consumo de carnes y bollería industrial). Los puntos a la derecha de la línea discontinua (OR > 1) indican mayor riesgo de sobrepeso; los de la izquierda, efecto protector. **Ninguna de las componentes principales** mantuvo una asociación estadísticamente significativa con el sobrepeso tras el ajuste completo (todos los IC95% cruzan el 1). En cambio, el **consumo de carnes** resultó el único predictor independiente significativo (OR = 1,03 por g/día; p = 0,015), indicando que por cada gramo adicional de carne consumido diariamente aumenta ligeramente el riesgo de sobrepeso. La edad mostró una tendencia positiva aunque no significativa (OR = 1,04; p = 0,088) en el modelo ajustado. Estos resultados sugieren que, en esta cohorte, el estilo de vida tiene mayor peso predictivo sobre el sobrepeso que la señal génica capturada por el PCA
 
 #### 7.6 Comparación gráfica de los 3 modelos
 
