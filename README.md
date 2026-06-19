@@ -171,7 +171,7 @@ La expresión génica (z-score por gen) de los 59 pacientes, ordenada por cluste
 
 ---
 
-### Paso 6 — Tabla descriptiva estratificada por terciles del PCA
+### Paso 6 - Tabla descriptiva estratificada por terciles del PCA
 
 Las 3 primeras componentes principales se categorizan en terciles (T1=bajo, T2=medio, T3=alto) y se compara la expresión de cada gen entre grupos usando **Kruskal-Wallis** (justificado por la no-normalidad del Paso 2).
 
@@ -179,7 +179,7 @@ Esta tabla permite identificar qué genes se expresan de forma diferencial segú
 
 ---
 
-### Paso 7 — Regresión logística para sobrepeso (IMC ≥ 25)
+### Paso 7 - Regresión logística para sobrepeso (IMC ≥ 25)
 
 #### 7.1 Identificación de variables confusoras
 
@@ -285,7 +285,7 @@ library(knitr)
 
 **Proyecto Transversal en R · Estadística y R para Ciencias de la Salud**  
 **Máster Universitario en Bioinformática · UNIR**  
-**Autores:** Caren Moreno, Analía Pastrana Jiménez, Ángel Guerrero
+**Autor:** Caren Moreno
 
 ---
 
