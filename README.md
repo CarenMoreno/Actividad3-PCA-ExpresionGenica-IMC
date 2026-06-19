@@ -274,16 +274,6 @@ Los principales hallazgos del trabajo son:
 
 ---
 
-## Cómo reproducir el análisis
-
-1. Clonar el repositorio o descargar los archivos.
-2. Abrir `Moreno_Caren_Actividad3.Rmd` en RStudio.
-3. Asegurarse de que `Base_de_datos_Los_Simpson_completa.csv` está en la misma carpeta.
-4. Hacer clic en **Knit**. Los paquetes faltantes se instalan automáticamente al inicio del script.
-5. Al finalizar, se genera el HTML y la carpeta `figuras_poster/` con todas las figuras en alta resolución (300 dpi).
-
----
-
 ## Dataset
 
 - **N = 59 individuos** (personajes de la serie Los Simpson)
