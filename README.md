@@ -141,7 +141,7 @@ Este es uno de los gráficos más interesantes del trabajo. Los individuos se pr
 
 #### 4.5 Clustering de pacientes (k=3) según scores del PCA
 
-![Clustering de pacientes](figuras/pca_clustering_pac.png)
+![Clustering de pacientes](figuras/fig5_cluster_individuos.png)
 
 Análogo al clustering de genes pero aplicado a individuos. Los tres clusters de pacientes no coinciden exactamente con las categorías de IMC, lo que refuerza la idea de que la expresión génica captura dimensiones de variabilidad que van más allá del peso corporal.
 
@@ -151,7 +151,7 @@ Análogo al clustering de genes pero aplicado a individuos. Los tres clusters de
 
 #### 5.1 Correlación entre genes y componentes principales
 
-![Heatmap genes-componentes](outputs/figuras/heatmap_corr_genes_pc.png)
+![Heatmap genes-componentes](figuras/fig6_heatmap_genes_pc.png)
 
 Este heatmap muestra la correlación de Spearman entre la expresión de cada gen y las 6 primeras componentes principales. Los asteriscos indican significancia estadística (*p<0.05, **p<0.01).
 
