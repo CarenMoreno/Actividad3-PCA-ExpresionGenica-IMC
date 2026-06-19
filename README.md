@@ -208,7 +208,7 @@ Se evaluó mediante:
 
 #### 7.5 Forest plot del modelo final
 
-![Forest plot](outputs/figuras/forest_plot.png)
+![Forest plot](figuras/forest_plot.png)
 
 Representación visual de los OR con sus IC95%. Las variables cuyo intervalo no cruza el 1 son las que tienen asociación estadísticamente significativa con el sobrepeso.
 
