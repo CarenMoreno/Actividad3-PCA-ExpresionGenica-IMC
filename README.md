@@ -1,15 +1,3 @@
-## Estructura del repositorio
-```
-├── datos/
-├── scripts/
-├── resultados/
-├── figuras/
-├── tablas/
-├── Actividad3.Rmd
-├── Actividad3.html
-└── README.md
-```
-
 # Proyecto Transversal en R (I): Análisis de bioestadística aplicada a la expresión génica en Los Simpson
 
 **Materia:** Estadística y R para Ciencias de la Salud  
