@@ -274,35 +274,6 @@ Todo el análisis fue realizado en **RStudio** con un documento **R Markdown** r
 
 ---
 
-## Estructura del repositorio
-
-```
-Actividad3-PCA-ExpresionGenica-IMC/
-│
-├── Moreno_Caren_Actividad3.Rmd        # Script principal (R Markdown, ejecutable en RStudio)
-├── Moreno_Caren_Actividad3.html       # Informe HTML renderizado
-├── Base_de_datos_Los_Simpson_completa.csv  # Dataset (necesario en la misma carpeta que el .Rmd)
-│
-└── figuras_poster/                    # Figuras y tablas generadas al correr el .Rmd
-    ├── fig1_variables_cos2.png
-    ├── fig2_cluster_variables.png
-    ├── fig3_contribuciones.png
-    ├── fig4_individuos_imc.png
-    ├── fig5_cluster_individuos.png
-    ├── fig6_heatmap_genes_pc.png
-    ├── fig7_heatmap_genes_pacientes.png
-    ├── fig8_forest_plot.png
-    ├── fig9_comparacion_modelos.png
-    ├── tabla_pca_varianza.csv
-    ├── tabla_pca_cargas.csv
-    ├── tabla_shapiro_wilk.csv
-    ├── tabla_descriptiva_terciles.csv
-    ├── tabla_regresion_logistica.csv
-    └── tabla_screening_confusoras.csv
-```
-
----
-
 ## Cómo reproducir el análisis
 
 1. Clonar el repositorio o descargar los archivos.
