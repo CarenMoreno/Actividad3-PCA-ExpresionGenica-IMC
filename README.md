@@ -10,8 +10,6 @@
 └── README.md
 ```
 
-# Principales resultados
-
 # Proyecto Transversal en R (I): Análisis de bioestadística aplicada a la expresión génica en Los Simpson
 
 **Materia:** Estadística y R para Ciencias de la Salud  
