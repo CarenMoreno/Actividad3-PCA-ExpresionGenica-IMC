@@ -18,18 +18,35 @@ La pregunta central es: ¿pueden los perfiles de expresión génica predecir si 
 ## Estructura del repositorio
 
 ```
-📁 Actividad3-PCA-ExpresionGenica-IMC/
+Actividad3-PCA-ExpresionGenica-IMC/
 │
-├── 📄 Moreno_Caren_Actividad3.Rmd      # Código fuente en R Markdown
-├── 📄 Moreno_Caren_Actividad3.html     # Informe final renderizado
-├── 📄 README.md                        # Este archivo
+├── datos/
+│   └── dataset_simpson.csv
 │
-├── 📁 data/
-│   └── dataset_simpson.csv            # Dataset original
+├── scripts/
+│   ├── Moreno_Caren_Actividad3.Rmd                       
+│     └── Moreno_Caren_Actividad3.html
 │
-└── 📁 outputs/
-    ├── figuras/                       # Gráficos exportados
-    └── tablas/                        # Tablas de resultados
+├── README.md
+│
+├── figuras/
+│   ├── fig1_variables_cos2.png
+│   ├── fig2_cluster_variables.png
+│   ├── fig3_contribuciones.png
+│   ├── fig4_individuos_imc.png
+│   ├── fig5_cluster_individuos.png
+│   ├── fig6_heatmap_genes_pc.png
+│   ├── fig7_heatmap_genes_pacientes.png
+│   ├── fig8_forest_plot.png
+│   └── fig9_comparacion_modelos.png
+│
+└── tablas/                   
+    ├── tabla_pca_varianza.csv
+    ├── tabla_pca_cargas.csv
+    ├── tabla_shapiro_wilk.csv
+    ├── tabla_descriptiva_terciles.csv
+    ├── tabla_regresion_logistica.csv
+    └── tabla_screening_confusoras.csv
 ```
 
 ---
