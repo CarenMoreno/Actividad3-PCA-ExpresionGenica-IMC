@@ -7,19 +7,11 @@
 
 ---
 
-## ¿De qué trata este trabajo?
-
-Este trabajo explora la relación entre la **expresión de 37 genes asociados a obesidad** y el **Índice de Masa Corporal (IMC)** en una población simulada de 59 individuos. Para eso usé un pipeline completo de análisis estadístico en R que va desde la carga y limpieza de los datos hasta la construcción de modelos de regresión logística, pasando por un PCA, heatmaps y tablas descriptivas.
-
-La pregunta central es: ¿pueden los perfiles de expresión génica predecir si un individuo tiene sobrepeso (IMC ≥ 25)? Spoiler: la respuesta es moderadamente sí, pero con muchos matices biológicos interesantes en el camino.
-
----
-
 ## Descripción
 
-Este repositorio contiene el análisis bioinformático completo de la **expresión de 37 genes asociados a la obesidad** en una cohorte simulada de 59 individuos (dataset *Los Simpson*). El objetivo es identificar patrones de expresión génica relacionados con el índice de masa corporal (IMC) mediante técnicas de reducción de la dimensionalidad, clustering, correlación y modelos de regresión logística.
+Este repositorio contiene el análisis bioinformático completo de la **expresión de 37 genes asociados a la obesidad** en una cohorte simulada de 59 individuos (dataset *Los Simpson*). El objetivo es identificar patrones de expresión génica relacionados con el índice de masa corporal (IMC) mediante técnicas de reducción de la dimensionalidad, clustering, correlación y modelos de regresión logística. 
 
-Todo el análisis fue realizado en **RStudio** con un documento **R Markdown** reproducible que genera automáticamente las figuras y tablas.
+Para eso usé un pipeline completo de análisis estadístico en R que va desde la carga y limpieza de los datos hasta la construcción de modelos de regresión logística, pasando por un PCA, heatmaps y tablas descriptivas. Todo el análisis fue realizado en **RStudio**.
 
 ---
 
