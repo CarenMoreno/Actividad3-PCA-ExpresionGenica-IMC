@@ -388,13 +388,6 @@ El forest plot muestra los Odds Ratio (OR) con sus intervalos de confianza al 95
 
 ---
 
-## Referencia
-
-Actividad 3 — Proyecto Transversal en R (I)  
-Máster Universitario en Bioinformática · UNIR  
-Asignatura: Estadística y R para Ciencias de la Salud  
-Junio 2026
-
 ## Licencia
 
 Este trabajo es de uso académico en el marco de la materia *Estadística y R para Ciencias de la Salud*. El dataset *Los Simpson* es un conjunto de datos simulado con fines educativos.
