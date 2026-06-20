@@ -136,7 +136,7 @@ Esta agrupación es exploratoria pero biológicamente sugerente.
 #### 4.3 Contribución de las variables a PC1 y PC2
 
 <p align="center">
-  <img src="figuras/fig3_contribuciones.png" width="600">
+  <img src="figuras/fig3_contribuciones.png" width="500">
 </p>
 
 Las barras muestran qué porcentaje de la varianza de cada componente explica cada gen. La línea punteada indica el umbral esperado si todos los genes contribuyeran por igual (100/37 ≈ 2.7%). Los genes que superan ese umbral son los más informativos para cada componente.
@@ -145,7 +145,9 @@ Las barras muestran qué porcentaje de la varianza de cada componente explica ca
 
 #### 4.4 Distribución de pacientes en PC1-PC2 según categoría de IMC
 
-![Individuos por IMC](figuras/fig4_individuos_imc.png)
+<p align="center">
+  <img src="figuras/fig4_individuos_imc.png" width="600">
+</p>
 
 Este es uno de los gráficos más interesantes del trabajo. Los individuos se proyectan en el plano PC1-PC2 y se colorean según su categoría de IMC (normopeso, sobrepeso, obesidad).
 
