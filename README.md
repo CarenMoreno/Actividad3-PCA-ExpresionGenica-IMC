@@ -107,7 +107,9 @@ Se generaron **5 visualizaciones complementarias** del PCA:
 
 #### 4.1 Variables coloreadas según cos²
 
-![Variables según cos²](figuras/fig1_variables_cos2.png)
+<p align="center">
+  <img src="figuras/fig1_variables_cos2.png" width="600">
+</p>
 
 El gráfico de círculo de correlaciones muestra qué tan bien representado está cada gen en el plano PC1-PC2. Los genes con **cos² alto** (color intenso) son los que el PCA captura mejor. Genes con cos² bajo están menos relacionados con las dos primeras componentes y quizás necesitarían más dimensiones para ser bien representados.
 
