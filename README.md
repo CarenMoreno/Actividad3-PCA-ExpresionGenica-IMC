@@ -239,7 +239,9 @@ Representación visual de los OR con sus IC95%. Las variables cuyo intervalo no 
 
 #### 7.6 Comparación gráfica de los 3 modelos
 
-![Comparación de modelos](figuras/fig9_comparacion_modelos.png)
+<p align="center">
+  <img src="figuras/fig9_comparacion_modelos.png" width="600">
+</p>
 
 ---
 
