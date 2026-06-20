@@ -1,0 +1,583 @@
+---
+title: "Actividad 3 - Estadística y R para Ciencias de la Salud"
+subtitle: "Análisis multivariante (PCA), correlaciónes y regresion logística sobre expresión génica relaciónada con la obesidad (dataset 'Los Simpson')"
+author: "Caren Moreno"
+date: "`r format(Sys.Date(), '%d/%m/%Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    number_sections: true
+    code_folding: show
+    theme: flatly
+    highlight: tango
+    df_print: kable
+---
+
+<style type="text/css">
+h1.title { color: #3B1F5C; font-weight: 700; }
+h1, h2, h3 { color: #6A3FA0; }
+.main-container { max-width: 1100px; }
+body { background-color: #FBF8FE; }
+.toc-content { color: #3B1F5C; }
+table { background-color: #ffffff; }
+caption { color: #6A3FA0; font-weight: 600; font-style: normal; }
+::selection { background: #EAD2FA; }
+a { color: #9069C0; }
+.btn { background-color: #9069C0; border-color: #9069C0; }
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
+                       fig.align = "center", fig.width = 8, fig.height = 6)
+
+## --- Instalacion automatica de paquetes faltantes (CRAN) ---
+paquetes <- c("tidyverse", "factoextra", "FactoMineR", "pheatmap", "corrplot",
+              "gridExtra", "cowplot", "ggpubr", "ggrepel", "broom", "car",
+              "pROC", "lmtest", "kableExtra")
+nuevos <- paquetes[!(paquetes %in% installed.packages()[, "Package"])]
+if (length(nuevos) > 0) install.packages(nuevos, dependencies = TRUE)
+
+library(tidyverse)
+library(factoextra)
+library(FactoMineR)
+library(pheatmap)
+library(corrplot)
+library(gridExtra)
+library(cowplot)
+library(ggpubr)
+library(ggrepel)
+library(broom)
+library(car)
+library(pROC)
+library(lmtest)
+library(kableExtra)
+
+set.seed(123)
+
+## --- Carpeta para guardar TODAS las figuras en alta resolucion (uso en el poster) ---
+carpeta_poster <- "figuras_poster"
+if (!dir.exists(carpeta_poster)) dir.create(carpeta_poster)
+
+# Paleta de colores pastel utilizada en todo el documento
+pal_imc    <- c("Normal" = "#9069C0", "Sobrepeso" = "#F8B195", "Obesidad" = "#E06377")
+pal_clust  <- c("1" = "#9069C0", "2" = "#F8B195", "3" = "#6FB1B5")
+theme_set(theme_minimal(base_size = 12))
+```
+
+# Introducción
+
+La obesidad es una condición multifactorial en la que intervienen factores genéticos, ambientales y de estilo de vida. El estudio de la expresión génica permite explorar posibles patrones biológicos relacionados con este fenómeno.
+En este trabajo se analizó un conjunto de datos correspondiente a 59 individuos y la expresión de 37 genes asociados con procesos metabólicos. Mediante técnicas de reducción de dimensionalidad y análisis estadísticos implementados en R, se buscó resumir la información contenida en los genes estudiados y explorar su posible relación con las categorías de índice de masa corporal (IMC). Para este trabajo se uso el dataset *"Los Simpson"*.
+
+# Paso 1. Carga y limpieza de los datos
+
+```{r carga-datos}
+df <- read.csv("Base_de_datos_Los_Simpson_completa.csv",
+                row.names = 1, check.names = FALSE, stringsAsFactors = FALSE)
+
+# Identificamos las columnas correspondientes a los 37 genes
+genes <- names(df)[which(names(df) == "ADCY3"):which(names(df) == "UHMK1")]
+
+cat("Numero de genes analizados:", length(genes), "\n")
+cat("Numero de pacientes (filas) antes de la limpieza:", nrow(df), "\n")
+
+# Comprobación de valores faltantes (NA) en las variables de expresión génica
+na_genes <- colSums(is.na(df[, genes]))
+cat("Total de NA detectados en variables génicas:", sum(na_genes), "\n")
+
+filas_incompletas <- which(rowSums(is.na(df[, genes])) > 0)
+if (length(filas_incompletas) > 0) {
+  df <- df[-filas_incompletas, ]
+  cat(length(filas_incompletas), "fila(s) eliminada(s) por datos incompletos.\n")
+} else {
+  cat("No se detectaron filas incompletas: no fue necesario eliminar pacientes.\n")
+}
+
+# Variables derivadas del IMC, necesarias para el resto del trabajo
+df <- df %>%
+  mutate(
+    imc_categoria = case_when(
+      imc_kg_m2 < 25 ~ "Normal",
+      imc_kg_m2 >= 25 & imc_kg_m2 < 30 ~ "Sobrepeso",
+      imc_kg_m2 >= 30 ~ "Obesidad"
+    ),
+    imc_categoria = factor(imc_categoria, levels = c("Normal", "Sobrepeso", "Obesidad")),
+    sobrepeso = factor(ifelse(imc_kg_m2 >= 25, "Si", "No"), levels = c("No", "Si"))
+  )
+
+cat("\nDimension final del dataset:", nrow(df), "pacientes x", ncol(df), "variables\n")
+
+knitr::kable(table(df$imc_categoria), col.names = c("Categoría de IMC", "N"),
+             caption = "Distribución de pacientes por categoría de IMC") %>%
+  kable_styling(full_width = FALSE, bootstrap_options = c("striped", "hover"))
+```
+
+# Paso 2. Análisis de normalidad (test de Shapiro-Wilk)
+
+Se evalua la normalidad de la distribución de cada uno de los 37 genes, paso previo indispensable para decidir si los análisis descriptivos e inferenciales posteriores deben abordarse con métodos parametricos o no parametricos.
+
+```{r shapiro}
+shapiro_res <- tibble(
+  Gen = genes,
+  p_valor = sapply(df[, genes], function(x) shapiro.test(x)$p.value)
+) %>%
+  mutate(
+    Distribucion = ifelse(p_valor > 0.05, "Normal", "No normal"),
+    p_valor_fmt = ifelse(p_valor < 0.001, formatC(p_valor, format = "e", digits = 2),
+                          formatC(p_valor, format = "f", digits = 3))
+  ) %>%
+  arrange(p_valor)
+
+cat("Genes con distribución NO normal (p<0.05):", sum(shapiro_res$p_valor < 0.05),
+    "de", nrow(shapiro_res), "\n")
+
+write.csv(shapiro_res, file.path(carpeta_poster, "tabla_shapiro_wilk.csv"), row.names = FALSE)
+
+shapiro_res %>%
+  select(Gen, p_valor_fmt, Distribucion) %>%
+  knitr::kable(col.names = c("Gen", "Valor p (Shapiro-Wilk)", "Distribución"),
+               caption = "Tabla 0. Resultados del test de normalidad de Shapiro-Wilk por gen") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE) %>%
+  scroll_box(height = "400px")
+```
+
+**Interpretación:** ninguno de los 37 genes presenta una distribución compatible con la normalidad (p<0.05 en todos los casos), por lo que en los análisis descriptivos se opta por estadísticos de tendencia central robustos (mediana y rango interpercentilico) y por pruebas no parametricas (Kruskal-Wallis) para la comparación entre grupos.
+
+# Paso 3. Análisis de Componentes Principales (PCA)
+
+## 3.1 Extracción de componentes y varianza explicada
+
+```{r pca}
+mat_genes <- as.matrix(df[, genes])
+pca <- prcomp(mat_genes, center = TRUE, scale. = TRUE)
+
+var_exp <- summary(pca)$importance
+tabla_r2 <- tibble(
+  Componente = paste0("PC", 1:ncol(var_exp)),
+  Valor_propio = round(pca$sdev^2, 3),
+  R2_pct = round(var_exp["Proportion of Variance", ] * 100, 2),
+  R2_acum_pct = round(var_exp["Cumulative Proportion", ] * 100, 2)
+)
+
+write.csv(tabla_r2, file.path(carpeta_poster, "tabla_pca_varianza.csv"), row.names = FALSE)
+
+tabla_r2 %>%
+  head(10) %>%
+  knitr::kable(col.names = c("Componente", "Valor propio", "R2 (%)", "R2 acumulado (%)"),
+               caption = "Tabla 1. Varianza explicada (R2) por cada componente principal") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+Las seis primeras componentes acumulan en conjunto un `r round(tabla_r2$R2_acum_pct[6],1)`% de la varianza total de expresión génica, motivo por el cual se conservan para los análisis posteriores.
+
+## 3.2 Cargas (loadings) de las variables
+
+```{r pca-cargas}
+cargas <- as.data.frame(round(pca$rotation[, 1:6], 3))
+cargas$Gen <- rownames(cargas)
+cargas <- cargas %>% select(Gen, everything())
+
+write.csv(cargas, file.path(carpeta_poster, "tabla_pca_cargas.csv"), row.names = FALSE)
+
+cargas %>%
+  knitr::kable(caption = "Tabla 2. Cargas (loadings) de cada gen en las 6 primeras componentes") %>%
+  kable_styling(bootstrap_options = c("striped", "hover")) %>%
+  scroll_box(height = "400px")
+```
+
+## 3.3 Incorporación de los scores de las 6 primeras componentes al dataframe
+
+```{r pca-scores}
+scores <- as.data.frame(pca$x[, 1:6])
+names(scores) <- paste0("PC", 1:6)
+df <- bind_cols(df, scores)
+
+cat("Scores PC1-PC6 incorporados. Dimension actual del dataframe:", nrow(df), "x", ncol(df), "\n")
+```
+
+# Paso 4. Visualizaciones del PCA
+
+## 4.1 Variables coloreadas segun calidad de representación (cos2)
+
+```{r fig-cos2, fig.cap="Figura 1. Variables del PCA coloreadas por cos2"}
+p_var_cos2 <- fviz_pca_var(pca,
+                            col.var = "cos2",
+                            gradient.cols = c("#EAD2FA", "#9069C0", "#3B1F5C"),
+                            repel = TRUE,
+                            title = "Variables del PCA coloreadas por calidad de representación (cos2)")
+ggsave(file.path(carpeta_poster, "fig1_variables_cos2.png"), p_var_cos2,
+       width = 7.5, height = 6.5, dpi = 300)
+p_var_cos2
+```
+*Se observó que algunos genes presentaron una mejor representación en las dos primeras componentes principales, indicando que estas componentes resumen una parte importante de la variabilidad presente en los datos.*
+
+## 4.2 Clustering de variables (k=3) sobre el espacio PCA
+
+```{r fig-cluster-var, fig.cap="Figura 2. Clustering de variables génicas"}
+var_coords <- as.data.frame(pca$rotation[, 1:2])
+km_var <- kmeans(var_coords, centers = 3, nstart = 25)
+var_coords$cluster <- factor(km_var$cluster)
+var_coords$Gen <- rownames(var_coords)
+
+p_var_cluster <- ggplot(var_coords, aes(PC1, PC2, color = cluster, label = Gen)) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "grey70") +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "grey70") +
+  geom_point(size = 2.5) +
+  geom_text_repel(size = 3, max.overlaps = 20, show.legend = FALSE) +
+  scale_color_manual(values = pal_clust, name = "Cluster") +
+  labs(title = "Clustering de variables génicas (k=3) sobre el espacio PCA",
+       x = paste0("PC1 (", round(var_exp[2,1]*100,1), "%)"),
+       y = paste0("PC2 (", round(var_exp[2,2]*100,1), "%)")) +
+  theme(legend.position = "bottom")
+
+ggsave(file.path(carpeta_poster, "fig2_cluster_variables.png"), p_var_cluster,
+       width = 7.5, height = 6.5, dpi = 300)
+write.csv(var_coords %>% select(Gen, PC1, PC2, cluster) %>% arrange(cluster),
+          file.path(carpeta_poster, "tabla_cluster_variables.csv"), row.names = FALSE)
+p_var_cluster
+```
+
+## 4.3 Contribucion de las variables a PC1 y PC2
+
+```{r fig-contrib, fig.height=9, fig.cap="Figura 3. Contribucion de los genes a PC1 y PC2"}
+p_contrib1 <- fviz_contrib(pca, choice = "var", axes = 1, top = 15,
+                            fill = "#9069C0", color = "#3B1F5C") +
+  labs(title = "Contribucion de los genes a PC1") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1, size = 8))
+p_contrib2 <- fviz_contrib(pca, choice = "var", axes = 2, top = 15,
+                            fill = "#F8B195", color = "#A8442F") +
+  labs(title = "Contribucion de los genes a PC2") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1, size = 8))
+
+p_contrib_combo <- plot_grid(p_contrib1, p_contrib2, ncol = 1)
+ggsave(file.path(carpeta_poster, "fig3_contribuciones.png"), p_contrib_combo,
+       width = 8, height = 9, dpi = 300)
+p_contrib_combo
+```
+*Los genes POMC, ANO4, LEPR, ADCY3 y PCSK1 fueron los que más contribuyeron a las primeras componentes principales, lo cual podria sugerir una mayor participación en los patrones de variabilidad observados.*
+
+## 4.4 Distribución de pacientes en PC1-PC2 segun categoría de IMC
+
+```{r fig-ind-imc, fig.cap="Figura 4. Individuos coloreados por categoría de IMC"}
+p_ind_imc <- fviz_pca_ind(pca,
+                           geom.ind = "point",
+                           col.ind = df$imc_categoria,
+                           palette = pal_imc,
+                           addEllipses = TRUE, ellipse.type = "confidence",
+                           legend.title = "Categoría de IMC",
+                           pointsize = 2.5,
+                           title = "Distribución de pacientes en PC1-PC2 segun categoría de IMC") +
+  theme(legend.position = "bottom")
+
+ggsave(file.path(carpeta_poster, "fig4_individuos_imc.png"), p_ind_imc,
+       width = 7.5, height = 6.5, dpi = 300)
+p_ind_imc
+```
+*La distribución de los individuos mostró una superposición entre las categorías de IMC, sin una separación clara entre normopeso, sobrepeso y obesidad.*
+
+## 4.5 Clustering de pacientes (k=3) segun los scores del PCA
+
+```{r fig-cluster-ind, fig.cap="Figura 5. Clustering de pacientes"}
+ind_scores <- df %>% select(PC1, PC2, PC3, PC4, PC5, PC6)
+km_ind <- kmeans(ind_scores, centers = 3, nstart = 25)
+df$cluster_individuos <- factor(km_ind$cluster)
+
+p_ind_cluster <- fviz_cluster(km_ind, data = ind_scores,
+                               geom = "point", ellipse.type = "convex",
+                               palette = pal_clust,
+                               pointsize = 2.5,
+                               legend.title = "Cluster",
+                               main = "Clustering de pacientes (k=3) segun scores PCA (PC1-PC6)") +
+  theme(legend.position = "bottom")
+
+ggsave(file.path(carpeta_poster, "fig5_cluster_individuos.png"), p_ind_cluster,
+       width = 7.5, height = 6.5, dpi = 300)
+
+tab_cross <- table(Cluster = df$cluster_individuos, IMC = df$imc_categoria)
+write.csv(as.data.frame(tab_cross), file.path(carpeta_poster, "tabla_cluster_vs_imc.csv"), row.names = FALSE)
+p_ind_cluster
+```
+
+```{r tab-cross}
+knitr::kable(tab_cross, caption = "Tabla 3. Cluster de pacientes (PCA) vs. categoría de IMC") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+# Paso 5. Heatmap de correlaciónes de Spearman
+
+## 5.1 Correlación entre genes y componentes principales
+
+```{r heatmap-genes-pc}
+pcs <- paste0("PC", 1:6)
+cor_mat <- matrix(NA, nrow = length(genes), ncol = length(pcs), dimnames = list(genes, pcs))
+pval_mat <- cor_mat
+
+for (g in genes) {
+  for (pc in pcs) {
+    test <- suppressWarnings(cor.test(df[[g]], df[[pc]], method = "spearman"))
+    cor_mat[g, pc] <- test$estimate
+    pval_mat[g, pc] <- test$p.value
+  }
+}
+write.csv(round(cor_mat, 3), file.path(carpeta_poster, "tabla_correlaciones_spearman.csv"))
+
+pheatmap(cor_mat,
+         filename = file.path(carpeta_poster, "fig6_heatmap_genes_pc.png"),
+         width = 8, height = 9.67,
+         color = colorRampPalette(c("#3B1F5C", "#EAD2FA", "#F8B195", "#A8442F"))(100),
+         breaks = seq(-1, 1, length.out = 101),
+         cluster_cols = FALSE,
+         main = "Correlación de Spearman: genes vs. componentes principales (PC1-PC6)",
+         display_numbers = matrix(ifelse(pval_mat < 0.05, ifelse(pval_mat < 0.01, "**", "*"), ""),
+                                   nrow = nrow(pval_mat)),
+         number_color = "black", fontsize = 11, fontsize_row = 10,
+         fontsize_number = 10, fontsize_col = 12, angle_col = 0)
+
+knitr::include_graphics(file.path(carpeta_poster, "fig6_heatmap_genes_pc.png"))
+cat("Correlaciónes significativas (p<0.05):", sum(pval_mat < 0.05), "de", length(pval_mat), "\n")
+```
+*El heatmap permitió visualizar patrones de correlación similares entre algunos genes y las componentes principales, evidenciando estructuras comunes en los perfiles de expresión.*
+
+**Figura 6.** Heatmap de correlaciónes de Spearman entre la expresión de cada gen y las 6 primeras componentes principales (\*p<0.05, \*\*p<0.01).
+
+## 5.2 Heatmap de expresión génica cruda por paciente
+
+```{r heatmap-genes-pacientes}
+mat_genes_scaled <- scale(mat_genes)
+rownames(mat_genes_scaled) <- df$nombre
+anno_row <- data.frame(IMC = df$imc_categoria); rownames(anno_row) <- df$nombre
+anno_colors <- list(IMC = pal_imc)
+
+pheatmap(mat_genes_scaled,
+         filename = file.path(carpeta_poster, "fig7_heatmap_genes_pacientes.png"),
+         width = 9.33, height = 11.33,
+         color = colorRampPalette(c("#3B1F5C", "#EAD2FA", "white", "#F8B195", "#A8442F"))(100),
+         annotation_row = anno_row, annotation_colors = anno_colors,
+         clustering_distance_rows = "euclidean", clustering_distance_cols = "euclidean",
+         clustering_method = "complete",
+         main = "Patrones de expresión génica (z-score) por paciente",
+         fontsize_row = 6, fontsize_col = 9, fontsize = 10, show_rownames = TRUE)
+
+knitr::include_graphics(file.path(carpeta_poster, "fig7_heatmap_genes_pacientes.png"))
+```
+
+**Figura 7.** Patrones de expresión génica (z-score) por paciente, agrupados por clustering jerarquico, con anotacion de categoría de IMC.
+
+# Paso 6. Tabla descriptiva estratificada por terciles del PCA
+
+Se categorizan las 3 primeras componentes en terciles (T1=bajo, T2=medio, T3=alto) y se compara la expresión de cada gen entre los 3 grupos mediante la prueba de Kruskal-Wallis (justificado por la ausencia de normalidad confirmada en el Paso 2).
+
+```{r terciles}
+crear_terciles <- function(x) {
+  cortes <- quantile(x, probs = c(1/3, 2/3))
+  cut(x, breaks = c(-Inf, cortes[1], cortes[2], Inf), labels = c("T1", "T2", "T3"))
+}
+df <- df %>% mutate(PC1_t = crear_terciles(PC1), PC2_t = crear_terciles(PC2), PC3_t = crear_terciles(PC3))
+
+mediana_riq <- function(x) {
+  med <- median(x); q1 <- quantile(x, 0.25); q3 <- quantile(x, 0.75)
+  sprintf("%.2f (%.2f-%.2f)", med, q1, q3)
+}
+
+construir_tabla_tercil <- function(data, var_tercil, genes) {
+  map_dfr(genes, function(g) {
+    valores <- data[[g]]; grupo <- data[[var_tercil]]
+    kw <- kruskal.test(valores ~ grupo)
+    tibble(Gen = g, T1 = mediana_riq(valores[grupo == "T1"]),
+           T2 = mediana_riq(valores[grupo == "T2"]),
+           T3 = mediana_riq(valores[grupo == "T3"]), p = kw$p.value)
+  })
+}
+
+tab_pc1 <- construir_tabla_tercil(df, "PC1_t", genes)
+tab_pc2 <- construir_tabla_tercil(df, "PC2_t", genes)
+tab_pc3 <- construir_tabla_tercil(df, "PC3_t", genes)
+
+tabla_desc <- tab_pc1 %>%
+  left_join(tab_pc2, by = "Gen", suffix = c("_PC1", "_PC2")) %>%
+  left_join(tab_pc3 %>% rename_with(~paste0(., "_PC3"), -Gen), by = "Gen") %>%
+  mutate(across(starts_with("p_"), ~ifelse(.x < 0.001, "<0.001", sprintf("%.3f", .x))))
+
+write.csv(tabla_desc, file.path(carpeta_poster, "tabla_descriptiva_terciles.csv"), row.names = FALSE)
+
+tabla_desc %>%
+  knitr::kable(caption = "Tabla 4. Mediana (RIQ) de expresión génica segun terciles de PC1, PC2 y PC3 (test de Kruskal-Wallis)",
+               col.names = c("Gen", "T1", "T2", "T3", "p", "T1", "T2", "T3", "p", "T1", "T2", "T3", "p")) %>%
+  add_header_above(c(" " = 1, "Terciles PC1" = 4, "Terciles PC2" = 4, "Terciles PC3" = 4)) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), font_size = 12) %>%
+  scroll_box(height = "500px")
+```
+
+```{r genes-sig}
+cat("Genes con diferencia significativa segun tercil de PC1:\n")
+print(tab_pc1 %>% filter(p < 0.05) %>% arrange(p) %>% pull(Gen))
+cat("\nGenes con diferencia significativa segun tercil de PC2:\n")
+print(tab_pc2 %>% filter(p < 0.05) %>% arrange(p) %>% pull(Gen))
+cat("\nGenes con diferencia significativa segun tercil de PC3:\n")
+print(tab_pc3 %>% filter(p < 0.05) %>% arrange(p) %>% pull(Gen))
+```
+
+# Paso 7. Regresion logística para sobrepeso (IMC >= 25)
+
+## 7.1 Identificación de variables confusoras
+
+Se realiza un cribado sistemático de variables sociodemográficas y de estilo de vida (excluyendo aquellas que forman parte constitutiva del propio IMC, como peso, talla, perimetros o porcentaje de grasa, para evitar colinealidad estructural con la variable resultado). Se considera variable de ajuste potencial a aquella asociada simultáneamente con el resultado (sobrepeso) y con la exposición principal (terciles de PC1), con un criterio de cribado de p<0.20 (regla habitual para no descartar confusoras moderadas).
+
+```{r confusoras}
+candidatas <- c("edad_anios", "sexo", "nivel_educativo", "ingreso_anual_usd",
+                "lugar_residencia", "etnicidad", "af_moderada_h_semana",
+                "af_intensa_h_semana", "tabaco", "alcohol", "frutas_g_d",
+                "verduras_g_d", "carnes_g_d", "bolleria_industrial_g_d")
+
+screening <- map_dfr(candidatas, function(v) {
+  x <- df[[v]]
+  if (is.numeric(x)) {
+    p_outcome  <- tryCatch(wilcox.test(x ~ df$sobrepeso)$p.value, error = function(e) NA)
+    p_exposure <- tryCatch(kruskal.test(x ~ df$PC1_t)$p.value, error = function(e) NA)
+  } else {
+    p_outcome  <- tryCatch(chisq.test(table(x, df$sobrepeso))$p.value, error = function(e) NA)
+    p_exposure <- tryCatch(chisq.test(table(x, df$PC1_t))$p.value, error = function(e) NA)
+  }
+  tibble(Variable = v, p_resultado = round(p_outcome,3), p_exposicion = round(p_exposure,3))
+}) %>% mutate(Confusora = ifelse(p_resultado < 0.20 & p_exposicion < 0.20, "Si", "No"))
+
+write.csv(screening, file.path(carpeta_poster, "tabla_screening_confusoras.csv"), row.names = FALSE)
+
+screening %>%
+  knitr::kable(caption = "Tabla 5. Cribado de variables confusoras (criterio p<0.20 con resultado y exposición)") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+
+vars_ajuste <- screening %>% filter(Confusora == "Si") %>% pull(Variable)
+if (length(vars_ajuste) == 0) vars_ajuste <- c("edad_anios", "sexo")
+cat("\nVariables seleccionadas como ajuste:", paste(vars_ajuste, collapse = ", "), "\n")
+```
+
+## 7.2 Modelos de regresion logística (niveles de ajuste progresivos)
+
+```{r modelos-glm}
+df_model <- df %>% mutate(sobrepeso_bin = ifelse(sobrepeso == "Si", 1, 0))
+
+f1 <- as.formula("sobrepeso_bin ~ PC1_t + PC2_t + PC3_t")
+f2 <- as.formula("sobrepeso_bin ~ PC1_t + PC2_t + PC3_t + edad_anios + sexo")
+f3 <- as.formula(paste("sobrepeso_bin ~ PC1_t + PC2_t + PC3_t +",
+                        paste(unique(c("edad_anios", "sexo", vars_ajuste)), collapse = " + ")))
+
+m1 <- glm(f1, data = df_model, family = binomial)
+m2 <- glm(f2, data = df_model, family = binomial)
+m3 <- glm(f3, data = df_model, family = binomial)
+```
+
+## 7.3 Tabla de Odds Ratio (IC95%) y valor p
+
+```{r tabla-or}
+tidy_modelo <- function(modelo, nombre) {
+  tidy(modelo, exponentiate = TRUE, conf.int = TRUE) %>%
+    filter(term != "(Intercept)") %>%
+    mutate(modelo = nombre,
+           `OR (IC95%)` = sprintf("%.2f (%.2f-%.2f)", estimate, conf.low, conf.high),
+           p = ifelse(p.value < 0.001, "<0.001", sprintf("%.3f", p.value))) %>%
+    select(modelo, term, `OR (IC95%)`, p)
+}
+
+tabla_or <- bind_rows(
+  tidy_modelo(m1, "Modelo 1 (crudo)"),
+  tidy_modelo(m2, "Modelo 2 (+edad+sexo)"),
+  tidy_modelo(m3, "Modelo 3 (+confusoras)")
+)
+write.csv(tabla_or, file.path(carpeta_poster, "tabla_regresion_logistica.csv"), row.names = FALSE)
+
+tabla_or %>%
+  pivot_wider(names_from = modelo, values_from = c(`OR (IC95%)`, p)) %>%
+  knitr::kable(caption = "Tabla 6. Modelo de regresion logística binaria para sobrepeso, terciles de PCA con 3 niveles de ajuste") %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), font_size = 12) %>%
+  scroll_box(height = "400px")
+```
+
+## 7.4 Calidad de los modelos
+
+```{r calidad-modelo}
+cat("--- Comparación de AIC ---\n"); print(AIC(m1, m2, m3))
+
+cat("\n--- Test de razón de verosimilitud (Modelo 1 vs Modelo 3) ---\n")
+print(lrtest(m1, m3))
+
+pseudo_r2 <- function(modelo) 1 - modelo$deviance / modelo$null.deviance
+cat("\nPseudo-R2 (McFadden) M1:", round(pseudo_r2(m1),3),
+    "| M2:", round(pseudo_r2(m2),3), "| M3:", round(pseudo_r2(m3),3), "\n")
+
+cat("\n--- VIF Modelo 3 (multicolinealidad) ---\n")
+print(vif(m3))
+
+roc_m1 <- roc(df_model$sobrepeso_bin, predict(m1, type = "response"), quiet = TRUE)
+roc_m3 <- roc(df_model$sobrepeso_bin, predict(m3, type = "response"), quiet = TRUE)
+cat("\nAUC Modelo 1:", round(auc(roc_m1),3), "| AUC Modelo 3:", round(auc(roc_m3),3), "\n")
+```
+
+## 7.5 Forest plot del modelo final ajustado
+
+```{r forest-plot, fig.height=6, fig.width=8.5, fig.cap="Figura 8. Forest plot del modelo ajustado"}
+tidy_m3 <- tidy(m3, exponentiate = TRUE, conf.int = TRUE) %>%
+  filter(term != "(Intercept)") %>%
+  mutate(
+    term_lab = case_when(
+      term == "PC1_tT2" ~ "PC1 - Tercil 2 (vs T1)", term == "PC1_tT3" ~ "PC1 - Tercil 3 (vs T1)",
+      term == "PC2_tT2" ~ "PC2 - Tercil 2 (vs T1)", term == "PC2_tT3" ~ "PC2 - Tercil 3 (vs T1)",
+      term == "PC3_tT2" ~ "PC3 - Tercil 2 (vs T1)", term == "PC3_tT3" ~ "PC3 - Tercil 3 (vs T1)",
+      term == "edad_anios" ~ "Edad (años)", term == "sexoMasculino" ~ "Sexo masculino (vs femenino)",
+      TRUE ~ term),
+    grupo = ifelse(str_starts(term, "PC"), "Componentes principales (terciles)", "Variables de ajuste"),
+    sig = ifelse(p.value < 0.05, "p<0.05", "n.s."))
+tidy_m3$term_lab <- factor(tidy_m3$term_lab, levels = rev(tidy_m3$term_lab))
+
+p_forest <- ggplot(tidy_m3, aes(x = estimate, y = term_lab, color = sig)) +
+  geom_vline(xintercept = 1, linetype = "dashed", color = "grey50") +
+  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high), height = 0.2, linewidth = 0.8) +
+  geom_point(size = 3) +
+  scale_color_manual(values = c("p<0.05" = "#A8442F", "n.s." = "#9069C0")) +
+  scale_x_log10() +
+  facet_grid(grupo ~ ., scales = "free_y", space = "free_y") +
+  labs(title = "Forest plot: regresion logística para sobrepeso (IMC >= 25)",
+       subtitle = "Modelo 3 (ajustado por confusoras identificadas)",
+       x = "Odds Ratio (escala log, IC 95%)", y = NULL, color = "Significancia") +
+  theme(legend.position = "bottom", strip.text.y = element_text(angle = 0))
+
+ggsave(file.path(carpeta_poster, "fig8_forest_plot.png"), p_forest, width = 8.5, height = 6, dpi = 300)
+p_forest
+```
+*Tras el ajuste por edad y sexo, no se observaron asociaciones estadísticamente significativas entre las componentes principales y la presencia de sobrepeso.*
+
+## 7.6 Comparación gráfica de los 3 modelos
+
+```{r comp-modelos, fig.height=6, fig.width=8.5, fig.cap="Figura 9. Comparación de OR entre modelos"}
+tidy_simple <- function(modelo, nombre) {
+  tidy(modelo, exponentiate = TRUE, conf.int = TRUE) %>%
+    filter(str_starts(term, "PC")) %>% mutate(modelo = nombre)
+}
+comp <- bind_rows(tidy_simple(m1, "Modelo 1: Crudo"),
+                   tidy_simple(m2, "Modelo 2: +Edad+Sexo"),
+                   tidy_simple(m3, "Modelo 3: +Confusoras"))
+comp$term <- factor(comp$term, levels = rev(unique(comp$term)))
+
+p_comp <- ggplot(comp, aes(x = estimate, y = term, color = modelo)) +
+  geom_vline(xintercept = 1, linetype = "dashed", color = "grey50") +
+  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high), height = 0.25,
+                  position = position_dodge(width = 0.6), linewidth = 0.7) +
+  geom_point(size = 2.5, position = position_dodge(width = 0.6)) +
+  scale_color_manual(values = c("Modelo 1: Crudo" = "#9069C0", "Modelo 2: +Edad+Sexo" = "#F8B195",
+                                 "Modelo 3: +Confusoras" = "#A8442F")) +
+  scale_x_log10() +
+  labs(title = "Comparación de OR para sobrepeso segun terciles de PCA",
+       x = "Odds Ratio (escala log, IC 95%)", y = NULL, color = "Modelo") +
+  theme(legend.position = "bottom")
+
+ggsave(file.path(carpeta_poster, "fig9_comparacion_modelos.png"), p_comp, width = 8.5, height = 6, dpi = 300)
+p_comp
+```
+
+# Conclusiones
+
+El análisis de componentes principales permitió resumir la información contenida en los 37 genes estudiados y explorar patrones de expresión relacionados con el IMC. Las seis primeras componentes explicaron una proporción importante de la variabilidad total y algunos genes, como POMC, ANO4, LEPR, ADCY3 y PCSK1, presentaron una mayor contribución a las primeras componentes.
+
+Sin embargo, se observó una superposición entre las categorías de IMC y los modelos ajustados no mostraron asociaciones estadísticamente significativas. En conjunto, estos resultados sugieren que la expresión génica por sí sola no permite discriminar completamente el estado ponderal y que la obesidad constituye un fenómeno multifactorial.
