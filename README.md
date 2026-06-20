@@ -157,7 +157,9 @@ Este es uno de los gráficos más interesantes del trabajo. Los individuos se pr
 
 #### 4.5 Clustering de pacientes (k=3) según scores del PCA
 
-![Clustering de pacientes](figuras/fig5_cluster_individuos.png)
+<p align="center">
+  <img src="figuras/fig5_cluster_individuos.png" width="600">
+</p>
 
 Análogo al clustering de genes pero aplicado a individuos. Los tres clusters de pacientes no coinciden exactamente con las categorías de IMC, lo que refuerza la idea de que la expresión génica captura dimensiones de variabilidad que van más allá del peso corporal.
 
