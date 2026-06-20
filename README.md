@@ -170,7 +170,7 @@ Análogo al clustering de genes pero aplicado a individuos. Los tres clusters de
 #### 5.1 Correlación entre genes y componentes principales
 
 <p align="center">
-  <img src="figuras/fig6_heatmap_genes_pc.png" width="475" height="600">
+  <img src="figuras/fig6_heatmap_genes_pc.png" width="450" height="600">
 </p>
 
 Este heatmap muestra la correlación de Spearman entre la expresión de cada gen y las 6 primeras componentes principales. Los asteriscos indican significancia estadística (*p<0.05, **p<0.01).
