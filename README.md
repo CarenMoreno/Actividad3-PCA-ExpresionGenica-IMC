@@ -181,7 +181,9 @@ Este heatmap muestra la correlación de Spearman entre la expresión de cada gen
 
 #### 5.2 Heatmap de expresión génica cruda por paciente
 
-![Heatmap expresión cruda](figuras/fig7_heatmap_genes_pacientes.png)
+<p align="center">
+  <img src="figuras/fig7_heatmap_genes_pacientes.png" width="650">
+</p>
 
 La expresión génica (z-score por gen) de los 59 pacientes, ordenada por clustering jerárquico y anotada con la categoría de IMC. Se observan **bloques de co-expresión** que son parcialmente consistentes con el IMC pero no perfectamente concordantes.
 
