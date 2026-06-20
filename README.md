@@ -296,4 +296,4 @@ Este trabajo es de uso académico en el marco de la materia *Estadística y R pa
 *Caren Moreno · Junio 2026*
 
 ## Poster
-![Poster](poster/Poster_mubio02_act3.png)
+![Poster](poster/Poster_mubio02_act3.jpg)
