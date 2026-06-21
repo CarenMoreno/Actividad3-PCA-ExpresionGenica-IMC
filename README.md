@@ -113,7 +113,7 @@ Se generaron **5 visualizaciones complementarias** del PCA:
 
 El gráfico de círculo de correlaciones muestra qué tan bien representado está cada gen en el plano PC1-PC2. Los genes con **cos² alto** (color intenso) son los que el PCA captura mejor. Genes con cos² bajo están menos relacionados con las dos primeras componentes y quizás necesitarían más dimensiones para ser bien representados.
 
-> **Interpretación:** **LEPR, ANO4, POMC, ADCY3 y PCSK1** se proyectan fuertemente hacia la derecha (PC1 positivo), lo que los identifica como los principales contribuyentes a la primera componente, asociada a procesos de regulación del apetito y del balance energético. En el eje PC2, **NTRK2 y CADM2** son los genes más influyentes, apuntando hacia la parte superior del gráfico. La mayoría de los genes presenta cos2 moderado-bajo, lo que refleja que la variabilidad de la expresión génica en esta cohorte está distribuida entre múltiples componentes y no queda capturada por las dos primeras dimensiones..
+> **Interpretación:** **LEPR, ANO4, POMC, ADCY3 y PCSK1** se proyectan fuertemente hacia la derecha (PC1 positivo), lo que los identifica como los principales contribuyentes a la primera componente, asociada a procesos de regulación del apetito y del balance energético. En el eje PC2, **NTRK2 y CADM2** son los genes más influyentes, apuntando hacia la parte superior del gráfico. La mayoría de los genes presenta cos2 moderado-bajo, lo que refleja que la variabilidad de la expresión génica en esta cohorte está distribuida entre múltiples componentes y no queda capturada por las dos primeras dimensiones.
 
 ---
 
